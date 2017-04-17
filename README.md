@@ -28,6 +28,10 @@ $(document).ready(function(){
 				style:"width:30px;text-align:left;"
 			},
 			data:[{"name":"name17","position":"position17","office":"office17","extn":"extn17","startDate":"date17","salary":"salary17"}]
+		changerCallBack:function(status,data){
+			//this==>dom
+
+			}
         },
         data:data,
 		columns:[
@@ -76,5 +80,6 @@ let config={
  
  + **配置data**
  初始化时可以预先置入数据
-
+ + **配置changeCallBack**
+ 初始化时，回调选中的项，在实际操作中，会触发选中或取消选中项, status选中状态，data 数据
 
