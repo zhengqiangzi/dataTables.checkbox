@@ -9,7 +9,10 @@ class DataTablesCheckbox{
 			th:{
 				style:"width:40px;text-align:left;"
 			},
-			data:[]
+			data:[],
+			changeCallBack:function(status,data){
+				//this 指向所触发的dom
+			}
 		}	
 		this.config=Object.assign({},this._defaultConfig,opts.checkbox);//合并内部与外部配置
 
@@ -73,24 +76,34 @@ class DataTablesCheckbox{
    		 			obj.prependTo(rowNode);
    		 			obj.find("input[type='checkbox']").prop("checked",true);
 
+   		 			//执行回调函数
+ 	  		 		_self.config.changeCallBack.bind(obj.find("input[type='checkbox']"),hasIn,data)()
+
    		 		}else{
+
    		 			obj.prependTo(rowNode);
    		 			obj.find("input[type='checkbox']").prop("checked",false);
    		 		}
 
    		 		obj.find("input[type='checkbox']").change(function(){
 
-   		 			if($(this).prop("checked")){
+   		 			var status=$(this).prop("checked");
+
+   		 			if(status){
 
    		 				_self.addDataToSelectedData(data);
 
    		 			}else{
+
    		 				_self.subtractionDataFromSelectedData(data);
    		 			}
 
    		 			_self.checkSelectAllInOnePage();
 
-   		 		})
+   		 			//执行回调函数
+ 	  		 		_self.config.changeCallBack.bind($(this),status,data)()
+
+   		 		});
 
 
 
