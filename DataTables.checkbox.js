@@ -13,7 +13,7 @@ class DataTablesCheckbox{
 			changeCallBack:function(status,data){
 				//this 指向所触发的dom
 			}
-		}	
+		}
 		this.config=Object.assign({},this._defaultConfig,opts.checkbox);//合并内部与外部配置
 
 		this.dt=new DataTable.Api( dt );//实例 api
@@ -30,6 +30,8 @@ class DataTablesCheckbox{
 		this.dt.context[0].aoHeaderCallback.push({
 
 			fn:function(tr,allData){
+
+
 
 				var a=$(tr).find("."+_self.config.className)
 				if(a.length>0){
@@ -60,13 +62,16 @@ class DataTablesCheckbox{
 
    		 	fn:function(row,data,index,indexs){
 
+
    		 		var hasIn=_self.hasInSelectedData(data);
 
+
    		 		var a=$(row).find("."+_self.config.className);
-   		 			if(a.length>0){
-   		 				a.unbind();
-   		 				a.remove();
-   		 			}
+
+   		 		if(a.length>0){
+   		 			a.unbind();
+   		 			a.remove();
+   		 		}
    		 		var rowNode=_self.dt.row(row).node();
 
    		 		var obj=$(`<td class='dataTablesCheckbox ${_self.config.className}'><input type='checkbox'/></td>`);
@@ -102,6 +107,8 @@ class DataTablesCheckbox{
 
    		 			//执行回调函数
  	  		 		_self.config.changeCallBack.bind($(this),status,data)()
+
+ 	  		 		obj.trigger("changeEvent")
 
    		 		});
 
@@ -154,6 +161,7 @@ class DataTablesCheckbox{
 	*/
 
 	addDataToSelectedData(data){
+
 
 		if(this.hasInSelectedData(data)){
 
@@ -238,13 +246,16 @@ DataTable.Api.register( 'checkbox.getData()', function ( opts ) {
 DataTable.Api.register( 'checkbox.setData()', function ( opts ) {
 	return this.iterator( 'table', function (ctx) {
 		ctx.checkbox.selectedData=opts;
-		ctx.checkbox.dt.draw();
+		ctx.checkbox.dt.draw(false);
 	});
 });
 
 
 $(document).on( 'preInit.dt.dtk', function (e, settings, json) {
+
+
 	if(settings.oInit.checkbox){
+
 		new DataTablesCheckbox(settings,settings.oInit);
 	}
 })
