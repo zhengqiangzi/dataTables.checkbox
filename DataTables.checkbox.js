@@ -1,8 +1,8 @@
 var DataTable = $.fn.dataTable;
 require("lodash");
-require("./index.css")
-class DataTablesCheckbox{
-	constructor(dt,opts) {
+require("./index.css");
+function  DataTablesCheckbox (dt,opts) {
+
 		this._defaultConfig={
 
 			className:"dataTablesCheckbox",
@@ -116,7 +116,6 @@ class DataTablesCheckbox{
 
    		 	}
    		 })
-	}
 
 
 	/**
@@ -127,7 +126,7 @@ class DataTablesCheckbox{
 	*/
 
 
-	hasInSelectedData(data){
+	this.hasInSelectedData=function(data){
 
 		return !!~_.findIndex(this.selectedData,data) || _.indexOf(this.selectedData,data)>=0?true:false;
 	}
@@ -137,7 +136,7 @@ class DataTablesCheckbox{
 		@parma data:查询数据
 		@return Number;
 	*/
-	getIndexInSelectedSource(data){
+	this.getIndexInSelectedSource=function(data){
 
 		var i=_.findIndex(this.selectedData,data);
 		var j=_.indexOf(this.selectedData,data);
@@ -160,7 +159,7 @@ class DataTablesCheckbox{
 		@return Boolean;
 	*/
 
-	addDataToSelectedData(data){
+	this.addDataToSelectedData=function(data){
 
 
 		if(this.hasInSelectedData(data)){
@@ -184,7 +183,7 @@ class DataTablesCheckbox{
 		@return Boolean;
 
 		*/
-	subtractionDataFromSelectedData(data){
+	this.subtractionDataFromSelectedData=function(data){
 
 		var delindex=this.getIndexInSelectedSource(data);
 		if(delindex>=0){
@@ -201,7 +200,7 @@ class DataTablesCheckbox{
 		@return null
 		@desc 检测当前页面中的数据是否全选，影响header上面的checkbox是否选择
 	*/
-	checkSelectAllInOnePage(){
+	this.checkSelectAllInOnePage=function(){
 
 		var _self=this;
 
