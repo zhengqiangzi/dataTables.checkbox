@@ -1,8 +1,9 @@
 var DataTable = $.fn.dataTable;
 require("lodash");
-require("./index.css")
+require("./index.css");
 class DataTablesCheckbox{
 	constructor(dt,opts) {
+
 		this._defaultConfig={
 
 			className:"dataTablesCheckbox",
@@ -26,12 +27,12 @@ class DataTablesCheckbox{
 
 		var _self=this;
 
+
+
 		//draw header时监听
 		this.dt.context[0].aoHeaderCallback.push({
 
 			fn:function(tr,allData){
-
-
 
 				var a=$(tr).find("."+_self.config.className)
 				if(a.length>0){
@@ -57,21 +58,19 @@ class DataTablesCheckbox{
    				_self.checkSelectAllInOnePage();
 			}
 		})
+		//this.dt.context[0].aoRowCallback=[]
 			//draw tr 监听
-   		 this.dt.context[0].aoRowCallback.push({
+   		this.dt.context[0].aoRowCallback.push({
 
    		 	fn:function(row,data,index,indexs){
 
-
    		 		var hasIn=_self.hasInSelectedData(data);
-
-
    		 		var a=$(row).find("."+_self.config.className);
-
    		 		if(a.length>0){
    		 			a.unbind();
    		 			a.remove();
    		 		}
+
    		 		var rowNode=_self.dt.row(row).node();
 
    		 		var obj=$(`<td class='dataTablesCheckbox ${_self.config.className}'><input type='checkbox'/></td>`);
@@ -85,10 +84,14 @@ class DataTablesCheckbox{
  	  		 		_self.config.changeCallBack.bind(obj.find("input[type='checkbox']"),hasIn,data)()
 
    		 		}else{
-
+   		 			//console.log(rowNode)
    		 			obj.prependTo(rowNode);
    		 			obj.find("input[type='checkbox']").prop("checked",false);
    		 		}
+
+
+
+
 
    		 		obj.find("input[type='checkbox']").change(function(){
 
@@ -111,11 +114,23 @@ class DataTablesCheckbox{
  	  		 		obj.trigger("changeEvent")
 
    		 		});
-
-
-
    		 	}
    		 })
+
+   		this.dt.on("destroy.dt",()=>{
+
+   			var header=this.dt.header();
+   				header=header[0]
+   			$(header.querySelector("."+_self.config.className)).remove();
+
+   			var rows = this.dt.rows();
+   				rows.map((item)=>{
+   					$(this.dt.row(item).node().querySelector("."+_self.config.className)).remove();
+   				})
+   			this.dt.context[0].aoHeaderCallback=[];
+   			this.dt.context[0].aoRowCallback=[];
+   		})
+
 	}
 
 
@@ -253,9 +268,15 @@ DataTable.Api.register( 'checkbox.setData()', function ( opts ) {
 
 $(document).on( 'preInit.dt.dtk', function (e, settings, json) {
 
-
+		//console.log(settings,json);
 	if(settings.oInit.checkbox){
+
 
 		new DataTablesCheckbox(settings,settings.oInit);
 	}
+	
 })
+/*$(document).on( 'preInit.dt', function (e, settings, json) {
+
+	console.log(e)
+})*/

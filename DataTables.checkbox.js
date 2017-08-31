@@ -20,7 +20,10 @@ require("./index.css");
 
 var DataTablesCheckbox = function () {
 	function DataTablesCheckbox(dt, opts) {
+		var _this = this;
+
 		(0, _classCallCheck3.default)(this, DataTablesCheckbox);
+
 
 		this._defaultConfig = {
 
@@ -74,19 +77,19 @@ var DataTablesCheckbox = function () {
 				_self.checkSelectAllInOnePage();
 			}
 		});
+		//this.dt.context[0].aoRowCallback=[]
 		//draw tr 监听
 		this.dt.context[0].aoRowCallback.push({
 
 			fn: function fn(row, data, index, indexs) {
 
 				var hasIn = _self.hasInSelectedData(data);
-
 				var a = $(row).find("." + _self.config.className);
-
 				if (a.length > 0) {
 					a.unbind();
 					a.remove();
 				}
+
 				var rowNode = _self.dt.row(row).node();
 
 				var obj = $("<td class='dataTablesCheckbox " + _self.config.className + "'><input type='checkbox'/></td>");
@@ -99,7 +102,7 @@ var DataTablesCheckbox = function () {
 					//执行回调函数
 					_self.config.changeCallBack.bind(obj.find("input[type='checkbox']"), hasIn, data)();
 				} else {
-
+					//console.log(rowNode)
 					obj.prependTo(rowNode);
 					obj.find("input[type='checkbox']").prop("checked", false);
 				}
@@ -124,6 +127,20 @@ var DataTablesCheckbox = function () {
 					obj.trigger("changeEvent");
 				});
 			}
+		});
+
+		this.dt.on("destroy.dt", function () {
+
+			var header = _this.dt.header();
+			header = header[0];
+			$(header.querySelector("." + _self.config.className)).remove();
+
+			var rows = _this.dt.rows();
+			rows.map(function (item) {
+				$(_this.dt.row(item).node().querySelector("." + _self.config.className)).remove();
+			});
+			_this.dt.context[0].aoHeaderCallback = [];
+			_this.dt.context[0].aoRowCallback = [];
 		});
 	}
 
@@ -269,8 +286,13 @@ DataTable.Api.register('checkbox.setData()', function (opts) {
 
 $(document).on('preInit.dt.dtk', function (e, settings, json) {
 
+	//console.log(settings,json);
 	if (settings.oInit.checkbox) {
 
 		new DataTablesCheckbox(settings, settings.oInit);
 	}
 });
+/*$(document).on( 'preInit.dt', function (e, settings, json) {
+
+	console.log(e)
+})*/
